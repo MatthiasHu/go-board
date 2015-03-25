@@ -20,15 +20,21 @@ function onLoad() {
 	}
 }
 
+function fieldClick(x, y) {
+	alert("hi");
+}
+
 function HTMLBoard() {
 	var str = "";
-	str += "<table><tbody>";
+	str += "<table id='board_table'><tbody>";
 	for (var y=0; y<size; y++) {
 		str += "<tr>";
 		for (var x=0; x<size; x++) {
-			str += "<td id='"+fieldId(x, y)
-				+"' class='field_class'>"
-				+fieldId(x, y)+"</td>";
+			str += "<td class='field_td'><div";
+			str += " id='"+fieldId(x, y)+"'";
+			str += " class='field_div'";
+			str += " onClick='fieldClick("+x+", "+y+");'";
+			str += ">"+fieldId(x, y)+"</div></td>";
 		}
 		str += "</tr>";
 	}
