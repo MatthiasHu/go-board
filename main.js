@@ -23,23 +23,27 @@ function onLoad() {
 	// display initial scores (0 both)
 	// and initial active player (black)
 	refreshScores();
-	refreshActivePlayerIdicators();
+	refreshActivePlayerIndicators();
 }
 
 function onFieldClick(x, y) {
 	switch (board[x][y].content) {
 		case null: // place a stone
 			setField(x, y, activePlayer);
-			activePlayer = flip(activePlayer);
+			flipActivePlayer();
 			break;
 		case activePlayer: // remove captured stones
-			alert("hi");
+			captureGroup(x, y, activePlayer);
 			break;
 		case flip(activePlayer): // for undoing turns
 			setField(x, y, null);
-			activePlayer = flip(activePlayer);
+			flipActivePlayer();
 			break;
 	}
+}
+function flipActivePlayer() {
+	activePlayer = flip(activePlayer);
+	refreshActivePlayerIndicators();
 }
 function flip(playerColor) {
 	switch (playerColor) {
@@ -69,6 +73,21 @@ function fieldContentToStyle(value) {
 	}
 }
 
+function captureGroup(x, y, color) {
+	if (x<0 || x>=size || y<0 || y>=size) return;
+	if (board[x][y].content != color) return;
+	setField(x, y, null);
+	scores[flip(color)] += 1;
+	refreshScores();
+	for (neighbour of [{x:x, y:y-1}
+		   ,{x:x, y:y+1}
+		   ,{x:x-1, y:y}
+		   ,{x:x+1, y:y}]) {
+		captureGroup(neighbour.x, neighbour.y, color);
+	}
+}
+
+
 function HTMLBoard() {
 	var str = "";
 	str += "<table id='board_table'><tbody>";
@@ -94,6 +113,10 @@ function refreshScores() {
 		scores[WHITE];
 }
 function refreshActivePlayerIndicators() {
+	var div = document.getElementById("activePlayerIndicator_black_div");
+	div.style.display = activePlayer==BLACK ? "block" : "none";
+	div = document.getElementById("activePlayerIndicator_white_div");
+	div.style.display = activePlayer==WHITE ? "block" : "none";
 }
 
 function fieldId(x, y) {
