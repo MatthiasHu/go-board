@@ -3,6 +3,8 @@
 var size = 9;
 var board = [];
 var BLACK="BLACK", WHITE="WHITE";
+var activePlayer = BLACK;
+var scores = {WHITE:0, BLACK:0}; 
 
 
 function onLoad() {
@@ -18,10 +20,53 @@ function onLoad() {
 			board[x][y].ui = document.getElementById(fieldId(x, y));
 		}
 	}
+	// display initial scores (0 both)
+	// and initial active player (black)
+	refreshScores();
+	refreshActivePlayerIdicators();
 }
 
-function fieldClick(x, y) {
-	alert("hi");
+function onFieldClick(x, y) {
+	switch (board[x][y].content) {
+		case null: // place a stone
+			setField(x, y, activePlayer);
+			activePlayer = flip(activePlayer);
+			break;
+		case activePlayer: // remove captured stones
+			alert("hi");
+			break;
+		case flip(activePlayer): // for undoing turns
+			setField(x, y, null);
+			activePlayer = flip(activePlayer);
+			break;
+	}
+}
+function flip(playerColor) {
+	switch (playerColor) {
+		case BLACK:
+			return WHITE;
+		case WHITE:
+			return BLACK;
+	}
+}
+
+function setField(x, y, value) {
+	if (!(value==null || value==BLACK || value==WHITE)) return;
+	board[x][y].content = value;
+	board[x][y].ui.style = fieldContentToStyle(value);
+}
+function fieldContentToStyle(value) {
+	switch (value) {
+		case null:
+			return "";
+			break;
+		case BLACK:
+			return "background: #111111";
+			break;
+		case WHITE:
+			return "background: #eeeeee";
+			break;
+	}
 }
 
 function HTMLBoard() {
@@ -33,13 +78,22 @@ function HTMLBoard() {
 			str += "<td class='field_td'><div";
 			str += " id='"+fieldId(x, y)+"'";
 			str += " class='field_div'";
-			str += " onClick='fieldClick("+x+", "+y+");'";
-			str += ">"+fieldId(x, y)+"</div></td>";
+			str += " onClick='onFieldClick("+x+", "+y+");'";
+			str += "></div></td>";
 		}
 		str += "</tr>";
 	}
 	str += "</tbody></table>";
 	return str;
+}
+
+function refreshScores() {
+	document.getElementById("score_black_div").innerHTML =
+		scores[BLACK];
+	document.getElementById("score_white_div").innerHTML =
+		scores[WHITE];
+}
+function refreshActivePlayerIndicators() {
 }
 
 function fieldId(x, y) {
