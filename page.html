@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>Go Brett</title>
+<title>Go Board</title>
 <script src="main.js"></script>
 <style>
 .field_div {
@@ -32,10 +32,12 @@
 <tr>
 <td class="activePlayerIndicator_td">
 <div id="activePlayerIndicator_black_div"
+	onClick="flipActivePlayer();"
 	class="field_div" style="background: #111111;"></div>
 </td>
 <td class="activePlayerIndicator_td">
 <div id="activePlayerIndicator_white_div"
+	onClick="flipActivePlayer();"
 	class="field_div" style="background: #eeeeee;"></div>
 </td>
 </tr>
